@@ -15,10 +15,20 @@ export class Renderer {
     row.setAttribute("id", `order_${obj.id}`);
     for (let key in obj) {
       if (key !== "id") {
-        let td = document.createElement("td");
-        let text = document.createTextNode(obj[key]);
-        td.appendChild(text);
-        row.appendChild(td);
+        if (key !== "user_info") {
+          let td = document.createElement("td");
+          let text = document.createTextNode(obj[key]);
+          td.appendChild(text);
+          row.appendChild(td);
+        } else {
+          let td = document.createElement("td");
+          let anchor = document.createElement("a");
+          let text = document.createTextNode(obj[key]);
+          anchor.appendChild(text);
+          anchor.setAttribute("href", "#");
+          td.appendChild(anchor);
+          row.appendChild(td);
+        }
       }
     }
 

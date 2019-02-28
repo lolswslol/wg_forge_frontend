@@ -1,13 +1,17 @@
 import orders from "../data/orders";
+import { UsersService } from "./users.service";
 
 export class OrdersService {
-  constructor() {}
+  constructor() {
+    this.userService = new UsersService();
+  }
 
   getOrders() {
     return orders.map(s => {
       return {
+        id: s.id,
         transaction_id: s.transaction_id,
-        user_info: s.user_id,
+        user_info: this.userService.getUserFullName(s.user_id),
         order_date: this.formateDate(s.created_at),
         order_amount: `$ ${s.total}`,
         card_number: this.formateCardNumber(s.card_number),
