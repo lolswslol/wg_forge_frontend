@@ -1,34 +1,39 @@
 import { UsersService } from "./users.service";
+import { OrdersService } from "./orders.service";
 
 export class Renderer {
   constructor() {
     this.usersService = new UsersService();
+    this.ordersService = new OrdersService();
+    this.orders = this.ordersService.getOrders();
+    this.filteredOrders = JSON.parse(JSON.stringify(this.orders));
   }
 
-  renderTable(arr) {
-    let table = document.createElement("table");
-    table.addEventListener("click", event => {
-      if (event.target.tagName.toLowerCase() === "a") {
-        event.target.nextElementSibling.classList.toggle("isHidden");
-      }
-    });
-    let header = `<thead>
-    <tr>
-        <th>Transaction ID</th>
-        <th>User Info</th>
-        <th>Order Date</th>
-        <th>Order Amount</th>
-        <th>Card Number</th>
-        <th>Card Type</th>
-        <th>Location</th>
-    </tr>
-</thead>`;
-    table.innerHTML = header;
-    arr.forEach(s => {
-      let row = this.createRow(s);
-      table.appendChild(row);
-    });
+  renderTable(orders) {
+    let table = document.createElement("table");    
+    let context = this.updateTableContent(orders);
+    table.appendChild(context.thead);
+    table.appendChild(context.tbody);
     return table;
+  }
+
+  updateTableContent(orders) {
+    const thead = document.createElement("thead");
+    thead.innerHTML = `<tr>
+    <th data-header= "transaction">Transaction ID</th>
+    <th data-header= "userInfo">User Info</th>
+    <th data-header= "orderDate">Order Date</th>
+    <th data-header= "orderAmount">Order Amount</th>
+    <th>Card Number</th>
+    <th data-header= "cardType">Card Type</th>
+    <th data-header= "location">Location</th>
+</tr>`;
+    let tbody = document.createElement("tbody");
+    orders.forEach(s => {
+      let row = this.createRow(s);
+      tbody.appendChild(row);
+    });
+    return { thead, tbody };
   }
 
   createRow(obj) {
