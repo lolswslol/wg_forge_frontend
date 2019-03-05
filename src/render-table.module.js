@@ -1,10 +1,12 @@
 import { UsersService } from "./users.service";
 import { OrdersService } from "./orders.service";
+import { CalculateService } from "./calculate.service";
 
 export class Renderer {
   constructor() {
     this.usersService = new UsersService();
     this.ordersService = new OrdersService();
+    this.calculateService = new CalculateService();
     this.orders = this.ordersService.getOrders();
     this.filteredOrders = JSON.parse(JSON.stringify(this.orders));
   }
@@ -29,10 +31,38 @@ export class Renderer {
     <th data-header= "location">Location</th>
 </tr>`;
     let tbody = document.createElement("tbody");
-    orders.forEach(s => {
-      let row = this.createRow(s);
+    orders.forEach(order => {
+      let row = this.createRow(order);
       tbody.appendChild(row);
     });
+
+    let totalObj = this.calculateService.getTotalObject(orders);    
+
+    tbody.innerHTML += `<tr>
+    <td>Orders Count</td>
+    <td>${totalObj.counts}</td>
+</tr>
+<tr>
+    <td>Orders Total</td>
+    <td>$${totalObj.orders_total}</td>
+</tr>
+<tr>
+    <td>Median Value</td>
+    <td>$${totalObj.median}</td>
+</tr>
+<tr>
+    <td>Average Check</td>
+    <td>$${totalObj.avg}</td>
+</tr>
+<tr>
+    <td>Average Check (Female)</td>
+    <td>$${totalObj.female}</td>
+</tr>
+<tr>
+    <td>Average Check (Male)</td>
+    <td>$${totalObj.male}</td>
+</tr>`;
+
     return { thead, tbody };
   }
 

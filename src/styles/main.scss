@@ -1,0 +1,13 @@
+@import "./styles.css";
+@import "~bootstrap/scss/bootstrap";
+
+body {
+  padding: 20px;
+}
+
+tr {
+  border-bottom: 1px solid grey;
+}
+th{
+    cursor: pointer;
+}
